@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TO DO List</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body{
+            background-image: radial-gradient(rgba(240, 104, 215, 0.951),black);
+            color: #fff;
+        }
+
+        h1{
+            text-align: center;
+            padding: 15px;
+        }
+
+        .container{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            width: auto;
+            height: 75%;
+        }
+
+        .form,
+        table {
+            margin: auto;
+            width: 53%;
+        }
+
+        .table {
+            width: 100%;
+            height: 80%;
+            overflow: auto;
+        }
+
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        tr.completed{
+            background: #888;
+            color: #fff;
+            text-decoration: line-through;
+        }
+
+        th{
+            background-color: lightgray;
+        }
+
+        tbody tr:hover {
+            background-color: lightgray;
+        }
+
+        .form input[type="text"], 
+        .form input[type="date"],
+        .form input[type="number"] {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form input[type='text']{
+            width: 30%;
+        }
+
+        .form button, 
+        .complete,
+        .delete {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #09113c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form button:hover,
+        .complete:hover,
+        .delete:hover {
+            background-color: #1b4b33;
+        }
+
+        .group{
+            display: inline;
+            background-color: #fff;
+            width: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>To Do List</h1>
+    <div class="container">
+
+        <div class="form">
+            <input type="text" name="task" id="taskInput" placeholder="Task Name">
+            <div class="group">
+                <label>Deadline :</label>
+                <input type="date" name="deadline" id="deadlineInput" placeholder="Time">
+            </div>
+            <input type="number" name="task" max="10" min="0" id="priorityInput" placeholder="Priority">
+            <button onclick="add()">Add</button>
+        </div>
+        <div class="table">
+            <table id="todo-table">
+                <thead>
+                    <th>SI NO</th>
+                    <th>Task</th>
+                    <th>Deadline</th>
+                    <th>Priority</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("deadlineInput").value = today;
+
+    var to_do_s = [
+        { id: '3', label: 'Study', date: '2024-04-10', Quote:'There is no substitute for hard work', priority: '9'},
+        { id: '1', label: 'Physical Activities', date: '2024-04-10', Quote:'A little progress each day adds up to big results',priority: '10'},
+        {id: '2', label: 'Eat', date: '2024-04-10', Quote:'There is no sincerer love than the love of food.',priority: '9'},
+        {id: '4', label: 'Sleep', date: '2024-04-10',Quote:'There is no sincerer love than the love of food.', priority: '10'}
+    ];
+
+
+    function renderTodos() {
+        var tableBody = document.querySelector('#todo-table tbody');
+        tableBody.innerHTML = '';
+
+        to_do_s.forEach(function(todo) {
+            var tr = document.createElement('tr');
+            tr.id = todo.id;
+            tr.innerHTML = `
+                <td>${todo.id}</td>
+                <td>${todo.label}</td>
+                <td>${todo.date}</td>
+                <td>${todo.priority}/10</td>
+                <td>
+                    <button class="complete" onclick="complete(${todo.id})">Completed</button>
+                    <button class="delete" onclick="remove(${todo.id})">Remove</button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+    }
+
+
+    function add() {
+        var taskInput = document.getElementById('taskInput');
+        var deadlineInput = document.getElementById('deadlineInput');
+        var priorityInput = document.getElementById('priorityInput');
+        console.log(taskInput.value, '==', deadlineInput.value, '===', priorityInput.value);
+        var newId = (to_do_s.length > 0) ? (parseInt(to_do_s[to_do_s.length - 1].id) + 1).toString() : '1';
+        var newTodo = {
+            id: newId,
+            label: taskInput.value,
+            date: deadlineInput.value,
+            priority: priorityInput.value
+        };
+
+        to_do_s.push(newTodo);
+        renderTodos();
+        console.log(to_do_s);
+    }
+
+    function complete(id) {
+        var trow = document.getElementById(id);
+        trow.classList.add('completed');
+    }
+
+
+    function remove(id) {
+        var trow = document.getElementById(id);
+        if (trow) {
+            trow.remove();
+        }
+    }
+    renderTodos();
+</script>
+</html>
